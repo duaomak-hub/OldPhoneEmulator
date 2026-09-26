@@ -262,3 +262,4 @@ MIT - Emulate responsibly. ROMs are copyright of Nokia/Microsoft - only use ROMs
 **Made for nostalgia, education, and preservation of mobile history.** 📱✨
 
 <!-- contributors cache refresh -->
+# Contributors: only duaomak-hub
