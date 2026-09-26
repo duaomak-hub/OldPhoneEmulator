@@ -4,15 +4,49 @@ Global configuration for OldPhoneEmulator
 import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent.parent
+def _get_base_dir():
+    # Handle zipapp / pyz case where __file__ is inside zip
+    try:
+        base = Path(__file__).parent.parent
+        # Check if base is inside a zip file (contains .pyz or .zip in path)
+        if ".pyz" in str(base) or ".zip" in str(base):
+            # Use current working directory or home
+            cwd_base = Path.cwd()
+            # If cwd is dist, use parent
+            if cwd_base.name == "dist":
+                cwd_base = cwd_base.parent
+            return cwd_base
+        # Check if writable
+        if not os.access(base, os.W_OK):
+            return Path.cwd()
+        return base
+    except Exception:
+        return Path.cwd()
+
+BASE_DIR = _get_base_dir()
 ROMS_DIR = BASE_DIR / "roms"
 ASSETS_DIR = BASE_DIR / "assets"
 CACHE_DIR = BASE_DIR / ".cache"
 
-# Ensure dirs exist
-ROMS_DIR.mkdir(exist_ok=True)
-ASSETS_DIR.mkdir(exist_ok=True)
-CACHE_DIR.mkdir(exist_ok=True)
+# Ensure dirs exist (ignore errors for zipapp)
+try:
+    ROMS_DIR.mkdir(exist_ok=True)
+    ASSETS_DIR.mkdir(exist_ok=True)
+    CACHE_DIR.mkdir(exist_ok=True)
+except Exception:
+    # Fallback to home directory
+    try:
+        home_base = Path.home() / ".oldphoneemulator"
+        home_base.mkdir(exist_ok=True)
+        ROMS_DIR = home_base / "roms"
+        ASSETS_DIR = home_base / "assets"
+        CACHE_DIR = home_base / ".cache"
+        ROMS_DIR.mkdir(exist_ok=True)
+        ASSETS_DIR.mkdir(exist_ok=True)
+        CACHE_DIR.mkdir(exist_ok=True)
+        BASE_DIR = home_base
+    except Exception:
+        pass
 
 # Emulator defaults
 DEFAULT_DEVICE = "nokia_n95"
