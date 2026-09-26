@@ -1,0 +1,10 @@
+flask>=2.3.0
+Pillow>=10.0.0
+# Optional - for full ARM emulation and better performance
+unicorn>=2.0.0; sys_platform != "emscripten"
+capstone>=5.0; sys_platform != "emscripten"
+# Optional GUI backends
+PySide6>=6.5; sys_platform == "win32" or sys_platform == "linux"
+pygame>=2.5; sys_platform == "win32" or sys_platform == "linux"
+# For EXE building
+pyinstaller>=6.0; sys_platform == "win32" or sys_platform == "linux"

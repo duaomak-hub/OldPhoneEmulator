@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OldPhoneEmulator - Symbian OS / Nokia Emulator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <span class="logo-icon">📱</span>
+                    <span class="logo-text">OldPhoneEmulator</span>
+                    <span class="logo-badge">v1.0</span>
+                </div>
+                <div class="header-stats">
+                    <span id="header-device">{{ current_device.name if current_device else 'No Device' }}</span>
+                    <span class="dot">•</span>
+                    <span id="header-roms">0 ROMs</span>
+                    <span class="dot">•</span>
+                    <span id="header-status" class="status-off">OFF</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-ghost" onclick="showPanel('devices')">📱 Devices</button>
+                <button class="btn btn-ghost" onclick="showPanel('roms')">💾 ROMs</button>
+                <button class="btn btn-ghost" onclick="showPanel('apps')">📦 Apps</button>
+                <button class="btn btn-primary" onclick="document.getElementById('rom-upload').click()">+ Import ROM</button>
+                <input type="file" id="rom-upload" hidden multiple accept=".rom,.bin,.img,.rofs,.uda,.sis,.sisx,.jar,.exe,.elf,.iso,.vhd,.zip">
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Left: Phone Emulator -->
+            <div class="phone-section">
+                <div class="phone-frame" id="phone-frame">
+                    <!-- Phone top -->
+                    <div class="phone-top">
+                        <div class="phone-speaker"></div>
+                        <div class="phone-brand">{{ current_device.name if current_device else 'NOKIA' }}</div>
+                        <div class="phone-camera"></div>
+                    </div>
+
+                    <!-- Screen -->
+                    <div class="phone-screen-container">
+                        <div class="screen-statusbar">
+                            <span class="signal">📶</span>
+                            <span class="operator">NOKIA</span>
+                            <span class="time" id="screen-time">12:00</span>
+                            <span class="battery">🔋</span>
+                        </div>
+                        <canvas id="phone-screen" width="240" height="320"></canvas>
+                        <div class="screen-overlay" id="screen-overlay">
+                            <div class="screen-content" id="screen-content">
+                                <div class="nokia-logo-screen">NOKIA</div>
+                                <div class="screen-menu" id="screen-menu">
+                                    <div class="menu-item active">📞 Phone</div>
+                                    <div class="menu-item">👥 Contacts</div>
+                                    <div class="menu-item">💬 Messaging</div>
+                                    <div class="menu-item">📸 Camera</div>
+                                    <div class="menu-item">🖼️ Gallery</div>
+                                    <div class="menu-item">🎵 Music</div>
+                                    <div class="menu-item">🌐 Web</div>
+                                    <div class="menu-item">📅 Calendar</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="screen-softkeys">
+                            <span id="soft-left">Options</span>
+                            <span id="soft-center">Open</span>
+                            <span id="soft-right">Exit</span>
+                        </div>
+                    </div>
+
+                    <!-- Keypad - Iconic Nokia -->
+                    <div class="keypad" id="keypad">
+                        <!-- Softkeys + Call/End + D-Pad -->
+                        <div class="keypad-row top-row">
+                            <button class="key softkey" data-key="soft_left"><span></span></button>
+                            <button class="key call-key" data-key="call">📞</button>
+                            <div class="dpad">
+                                <button class="key dpad-key dpad-up" data-key="dpad_up">▲</button>
+                                <div class="dpad-middle">
+                                    <button class="key dpad-key dpad-left" data-key="dpad_left">◀</button>
+                                    <button class="key dpad-key dpad-center" data-key="dpad_center">●</button>
+                                    <button class="key dpad-key dpad-right" data-key="dpad_right">▶</button>
+                                </div>
+                                <button class="key dpad-key dpad-down" data-key="dpad_down">▼</button>
+                            </div>
+                            <button class="key end-key" data-key="end">📵</button>
+                            <button class="key softkey" data-key="soft_right"><span></span></button>
+                        </div>
+
+                        <!-- Number pad - iconic -->
+                        <div class="keypad-grid">
+                            <button class="key num-key" data-key="1"><span class="num">1</span><span class="letters">.,</span></button>
+                            <button class="key num-key" data-key="2"><span class="num">2</span><span class="letters">abc</span></button>
+                            <button class="key num-key" data-key="3"><span class="num">3</span><span class="letters">def</span></button>
+
+                            <button class="key num-key" data-key="4"><span class="num">4</span><span class="letters">ghi</span></button>
+                            <button class="key num-key" data-key="5"><span class="num">5</span><span class="letters">jkl</span></button>
+                            <button class="key num-key" data-key="6"><span class="num">6</span><span class="letters">mno</span></button>
+
+                            <button class="key num-key" data-key="7"><span class="num">7</span><span class="letters">pqrs</span></button>
+                            <button class="key num-key" data-key="8"><span class="num">8</span><span class="letters">tuv</span></button>
+                            <button class="key num-key" data-key="9"><span class="num">9</span><span class="letters">wxyz</span></button>
+
+                            <button class="key num-key" data-key="*"><span class="num">*</span><span class="letters">+</span></button>
+                            <button class="key num-key" data-key="0"><span class="num">0</span><span class="letters">_</span></button>
+                            <button class="key num-key" data-key="#"><span class="num">#</span><span class="letters">⇧</span></button>
+                        </div>
+
+                        <!-- Bottom mic -->
+                        <div class="phone-bottom">
+                            <div class="phone-mic"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phone controls -->
+                <div class="phone-controls">
+                    <button class="btn btn-sm" onclick="powerToggle()">⏻ Power</button>
+                    <button class="btn btn-sm" onclick="resetCPU()">🔄 Reset</button>
+                    <button class="btn btn-sm" onclick="stepCPU()">⏭️ Step</button>
+                    <select id="device-selector" onchange="switchDevice(this.value)">
+                        {% for dev in devices %}
+                        <option value="{{ dev.id }}" {% if current_device and dev.id == current_device.id %}selected{% endif %}>{{ dev.name }} ({{ dev.screen.width }}x{{ dev.screen.height }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- Right: Panels -->
+            <div class="panels">
+                <!-- Launcher / App Grid -->
+                <div class="panel active" id="panel-launcher">
+                    <div class="panel-header">
+                        <h2>📱 App Launcher</h2>
+                        <span class="panel-subtitle">Symbian OS • S60 3rd FP1</span>
+                    </div>
+                    <div class="app-grid" id="app-grid">
+                        <!-- Filled by JS -->
+                    </div>
+
+                    <div class="panel-header mt">
+                        <h3>🔧 System</h3>
+                    </div>
+                    <div class="sys-grid">
+                        <div class="sys-card">
+                            <div class="sys-label">CPU</div>
+                            <div class="sys-value" id="cpu-pc">0x40000000</div>
+                            <div class="sys-sub" id="cpu-cycles">0 cycles</div>
+                        </div>
+                        <div class="sys-card">
+                            <div class="sys-label">RAM</div>
+                            <div class="sys-value" id="ram-usage">64 MB</div>
+                            <div class="sys-sub" id="ram-free">Free: 48 MB</div>
+                        </div>
+                        <div class="sys-card">
+                            <div class="sys-label">Processes</div>
+                            <div class="sys-value" id="proc-count">1</div>
+                            <div class="sys-sub" id="thread-count">3 threads</div>
+                        </div>
+                        <div class="sys-card">
+                            <div class="sys-label">Uptime</div>
+                            <div class="sys-value" id="uptime">00:00:12</div>
+                            <div class="sys-sub">Symbian OS 9.2</div>
+                        </div>
+                    </div>
+
+                    <div class="panel-header mt">
+                        <h3>💾 Drives</h3>
+                    </div>
+                    <div class="drives-list" id="drives-list"></div>
+                </div>
+
+                <!-- Devices Panel -->
+                <div class="panel" id="panel-devices">
+                    <div class="panel-header">
+                        <h2>📱 Nokia Devices</h2>
+                        <div class="search-box">
+                            <input type="text" id="device-search" placeholder="Search N95, 3310..." oninput="filterDevices(this.value)">
+                        </div>
+                    </div>
+                    <div class="devices-list" id="devices-list">
+                        {% for dev in devices %}
+                        <div class="device-card {% if dev.iconic %}iconic{% endif %}" data-name="{{ dev.name.lower() }}" onclick="switchDevice('{{ dev.id }}')">
+                            <div class="device-icon">{% if dev.family.value == 'Series 30' %}📟{% elif dev.screen.touch %}📱{% else %}📞{% endif %}</div>
+                            <div class="device-info">
+                                <div class="device-name">{{ dev.name }} {% if dev.iconic %}⭐{% endif %}</div>
+                                <div class="device-meta">{{ dev.family.value }} • {{ dev.year }} • {{ dev.screen.width }}x{{ dev.screen.height }}</div>
+                                <div class="device-desc">{{ dev.description }}</div>
+                            </div>
+                            <div class="device-spec">
+                                <span>{{ dev.hardware.cpu }} @ {{ dev.hardware.mhz }}MHz</span>
+                                <span>{{ dev.hardware.ram }}MB RAM</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- ROMs Panel -->
+                <div class="panel" id="panel-roms">
+                    <div class="panel-header">
+                        <h2>💾 ROM Manager</h2>
+                        <span class="panel-subtitle">Supports .rom .bin .sis .sisx .jar .exe .elf .iso .vhd .img</span>
+                    </div>
+                    <div class="drop-zone" id="drop-zone" onclick="document.getElementById('rom-upload').click()">
+                        <div class="drop-icon">📥</div>
+                        <div class="drop-text">Drop ROMs here or click to import</div>
+                        <div class="drop-sub">Symbian ROFS, UDA, FPSX, SIS, JAR, Windows EXE, Linux ELF, Disk images</div>
+                    </div>
+                    <div class="roms-list" id="roms-list"></div>
+
+                    <div class="panel-header mt">
+                        <h3>💿 Disk Images</h3>
+                    </div>
+                    <div class="disks-list" id="disks-list"></div>
+                </div>
+
+                <!-- Apps Panel -->
+                <div class="panel" id="panel-apps">
+                    <div class="panel-header">
+                        <h2>📦 Installed Apps</h2>
+                        <span class="panel-subtitle" id="apps-count">0 apps</span>
+                    </div>
+                    <div class="apps-list" id="apps-list"></div>
+                    <div class="panel-header mt">
+                        <h3>📜 Logs</h3>
+                        <button class="btn btn-xs" onclick="clearLogs()">Clear</button>
+                    </div>
+                    <div class="logs" id="logs"></div>
+                </div>
+
+                <!-- File Manager Panel -->
+                <div class="panel" id="panel-files">
+                    <div class="panel-header">
+                        <h2>📁 File Manager</h2>
+                        <div class="path-bar">
+                            <span id="current-path">C:\</span>
+                            <button class="btn btn-xs" onclick="navigateUp()">⬆️ Up</button>
+                        </div>
+                    </div>
+                    <div class="files-list" id="files-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="bottom-bar">
+            <div class="bottom-left">
+                <span>OldPhoneEmulator</span>
+                <span class="sep">|</span>
+                <span>Supports: Symbian OS 6.1 - Belle, Nokia S30/S40/S60, Windows PE, Linux ELF, ISO/VHD/QCOW</span>
+            </div>
+            <div class="bottom-right">
+                <span id="cpu-mode">ARMv5TE • User mode • Unicorn: <span id="unicorn-status">checking</span></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

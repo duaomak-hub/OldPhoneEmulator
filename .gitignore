@@ -1,0 +1,53 @@
+# ROMs and large binaries
+roms/*.rom
+roms/*.bin
+roms/*.img
+roms/*.rofs*
+roms/*.uda
+roms/*.fpsx
+roms/*.iso
+roms/*.vhd*
+roms/*.qcow*
+roms/*.vmdk
+roms/*.exe
+roms/*.elf
+roms/*.sis*
+roms/*.jar
+!roms/README.md
+
+# Emulated filesystem
+fs/
+.cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Build
+build/
+dist/
+*.spec
+*.egg-info/
+.eggs/
+
+# Venv
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
