@@ -1,4 +1,4 @@
-# ROMs and large binaries
+# ROMs and large binaries (keep README)
 roms/*.rom
 roms/*.bin
 roms/*.img
@@ -9,11 +9,16 @@ roms/*.iso
 roms/*.vhd*
 roms/*.qcow*
 roms/*.vmdk
-roms/*.exe
-roms/*.elf
 roms/*.sis*
 roms/*.jar
 !roms/README.md
+# Keep demo files - allow small demo files
+!roms/DemoApp.sisx
+!roms/DemoMIDlet.jar
+!roms/N95_ROFS2_demo.bin
+!roms/demo_*.exe
+!roms/demo_*.elf
+!roms/demo_*.iso
 
 # Emulated filesystem
 fs/
@@ -25,12 +30,20 @@ __pycache__/
 .Python
 *.so
 
-# Build
+# Build - keep spec ignored but allow dist executables
 build/
-dist/
 *.spec
 *.egg-info/
 .eggs/
+
+# Allow dist executables to be visible in repo!
+!dist/
+!dist/*.exe
+!dist/*.pyz
+!dist/*.bat
+!dist/*.sh
+!dist/*.txt
+!dist/README.txt
 
 # Venv
 .venv/
