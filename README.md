@@ -260,3 +260,5 @@ MIT - Emulate responsibly. ROMs are copyright of Nokia/Microsoft - only use ROMs
 - Flask for web UI
 
 **Made for nostalgia, education, and preservation of mobile history.** 📱✨
+
+<!-- contributors cache refresh -->
